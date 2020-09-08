@@ -1,0 +1,4 @@
+# Print GC:
+
+    -verbose:gc
+
