@@ -4,5 +4,4 @@
     -XX:+UnlockCommercialFeatures 
     -XX:+FlightRecorder 
     -XX:+DebugNonSafepoints 
-    -XX:StartFlightRecording=name=Profiling,duration=20s,delay=10s,filename=C:\Temp\myrecording.jfr,settings=profile
-  
+    -XX:StartFlightRecording=name=Profiling,duration=20s,delay=10s,filename=C:\Temp\myrecording.jfr,settings=profile,stackdepth=512
