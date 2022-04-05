@@ -1,3 +1,3 @@
 # javas
 
-Useful commands for java developers
+Useful commands and flags for java developers
