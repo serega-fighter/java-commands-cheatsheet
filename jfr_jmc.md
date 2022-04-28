@@ -9,3 +9,7 @@
 # Analyze JFR
 
 https://github.com/moditect/jfr-analytics
+
+# JMC Agent
+
+https://developers.redhat.com/blog/2020/10/29/collect-jdk-flight-recorder-events-at-runtime-with-jmc-agent#
