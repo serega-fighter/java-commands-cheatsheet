@@ -6,6 +6,10 @@
     -XX:+DebugNonSafepoints 
     -XX:StartFlightRecording=name=Profiling,duration=20s,delay=10s,filename=C:\Temp\myrecording.jfr,settings=profile,stackdepth=512
 
+# Custom JFR events
+
+https://inside.java/2022/04/25/sip48/
+
 # Analyze JFR
 
 https://github.com/moditect/jfr-analytics
