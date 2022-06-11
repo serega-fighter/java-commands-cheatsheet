@@ -22,7 +22,34 @@ Then use custom profile
 
 # Custom JFR events
 
+### Events
+
 https://inside.java/2022/04/25/sip48/
+
+### Per events settings
+
+    @Name("com.company.HttpGetRequest")
+    @Label("HTTP GET Request")
+    @Category("HTTP")
+    @Enabled(false)
+    @StackTrace(false)
+    @Threshold("0 ms")
+    public class HttpGetRequest extends jdk.jfr.Event {
+        @Label("Request URI")
+        String uri;
+    }
+    
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        HttpGetRequest request = new HttpGetRequest();
+        request.begin();
+        request.uri = req.getRequestURI();
+        ...
+        request.commit();
+    }
+
+To add the event to a configuration file, specify the event name, followed by “#” and a key-value pair:
+
+    jfr configure +com.company.HttpGetRequest#enabled=true --output http.jfc
 
 # Analyze JFR
 
