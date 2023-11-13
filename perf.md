@@ -1,18 +1,66 @@
-# Performance benchmark commands
+# Async profiler
 
-### General
+### Profile for long safepoint pauses
 
-### JMH
+    ./profiler.sh -t -d 10 -o collapsed -f /tmp/tts.collased --begin SafepointSynchronize::begin --end RuntimeService::record_safepoint_synchronized SafepointApplication
 
-Set number of iterations
+# JFR
 
-    java -jar target/benchmarks.jar -wi 20 -i 10 -f 1 -tu ns -bm avgt -rf text -rff results/benchmarks-8.txt -o log.txt
+    -XX:+UnlockDiagnosticVMOptions 
+    -XX:+UnlockCommercialFeatures 
+    -XX:+FlightRecorder 
+    -XX:+DebugNonSafepoints 
+    -XX:StartFlightRecording=name=Profiling,duration=20s,delay=10s,filename=C:\Temp\myrecording.jfr,settings=profile,stackdepth=512
 
-Analyse
+# Generate profile
 
-    java -XX:+UnlockDiagnosticVMOptions -XX:+TraceClassLoading -XX:+PrintCompilation -XX:+LogCompilation -XX:+PrintAssembly -jar target/benchmarks.jar -wi 1 -i 5 -f 1 -tu us -bm avgt -prof comp ".*Inline.*calculateInline.*"
+To help make event configuration easier, a new configure command was added to the jfr tool:
 
-Yourkit
+    jfr configure
 
-    java -agentpath:/Applications/YourKit\ 2013.app/bin/mac/libyjpagent.jnilib -jar target/benchmarks.jar -wi 10 -i 5 -f 1 -tu ns -bm avgt "Class.*Stream.*filterAndMapSeq.*" -p size="1000" -prof stack
+Another example
 
+    jfr configure exceptions=all --output exceptions.jfc
+
+Then use custom profile
+
+    java -XX:StartFlightRecording:settings=custom.jfc -jar app.jar
+
+# Custom JFR events
+
+### Events
+
+https://inside.java/2022/04/25/sip48/
+
+### Per events settings
+
+    @Name("com.company.HttpGetRequest")
+    @Label("HTTP GET Request")
+    @Category("HTTP")
+    @Enabled(false)
+    @StackTrace(false)
+    @Threshold("0 ms")
+    public class HttpGetRequest extends jdk.jfr.Event {
+        @Label("Request URI")
+        String uri;
+    }
+    
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        HttpGetRequest request = new HttpGetRequest();
+        request.begin();
+        request.uri = req.getRequestURI();
+        ...
+        request.commit();
+    }
+
+To add the event to a configuration file, specify the event name, followed by “#” and a key-value pair:
+
+    jfr configure +com.company.HttpGetRequest#enabled=true --output http.jfc
+
+# Analyze JFR
+
+https://github.com/moditect/jfr-analytics
+
+# JMC Agent
+
+https://developers.redhat.com/blog/2020/10/29/collect-jdk-flight-recorder-events-at-runtime-with-jmc-agent#
