@@ -4,6 +4,12 @@
 
     ./profiler.sh -t -d 10 -o collapsed -f /tmp/tts.collased --begin SafepointSynchronize::begin --end RuntimeService::record_safepoint_synchronized SafepointApplication
 
+# Profile for allocation
+
+Sometimes it's useful to disable TLAB if one wants to profile allocations with JFR
+
+    -XX:-UseTLAB
+
 # JFR
 
     -XX:+UnlockDiagnosticVMOptions 
